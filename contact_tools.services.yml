@@ -1,0 +1,3 @@
+services:
+  contact_tools:
+    class: Drupal\contact_tools\ContactTools
