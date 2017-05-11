@@ -4,3 +4,28 @@
  * @file
  * Main file for hooks and custom functions.
  */
+use Drupal\Component\Utility\Html;
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function contact_tools_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $storage = $form_state->getStorage();
+
+  if (isset($storage['contact_tools'])) {
+    if ($storage['contact_tools']['is_ajax']) {
+      $form['system_messages'] = [
+        '#markup' => '<div id="'. Html::getClass($form['#form_id']) .'-system-messages"></div>',
+        '#weight' => -100,
+      ];
+      $form['actions']['submit']['#ajax'] = [
+        'callback' => 'Drupal\contact_tools\Controller\ContactToolsAjaxController::ajaxSubmitHandler',
+        'event' => 'click',
+        'progress' => [
+          'type' => 'throbber',
+        ],
+      ];
+    }
+  }
+}

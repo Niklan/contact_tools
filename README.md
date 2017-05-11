@@ -47,3 +47,17 @@ Pass some values to the form via query.
 $contact_tools = \Drupal::service('contact_tools');
 return $contact_tools::createModalLink('Call me', 'callback', ['query' => ['product' => $node->id()]]);
 ```
+
+## Contact tools filter
+
+### modalLink
+
+```html
+[contact]{"type": "modalLink", "link_title": "Call me", "contact_form": "callback"}[/contact]
+```
+
+### modalLinkAjax
+
+```html
+[contact]{"type": "modalLinkAjax", "link_title": "Call me", "contact_form": "callback"}[/contact]
+```
