@@ -6,7 +6,6 @@
  */
 use Drupal\Component\Utility\Html;
 
-
 /**
  * Implements hook_form_alter().
  */
@@ -15,8 +14,13 @@ function contact_tools_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $
 
   if (isset($storage['contact_tools'])) {
     if ($storage['contact_tools']['is_ajax']) {
+      // @TODO rewrite code to update entire form.
+      //$message_wrapper_id = Html::getUniqueId($form['#form_id'] . '-system-messages');
+
       $form['system_messages'] = [
-        '#markup' => '<div id="'. Html::getClass($form['#form_id']) .'-system-messages"></div>',
+        '#type' => 'item',
+        '#markup' => '',
+        '#id' => Html::getClass($form['#form_id']) . '-system-messages',
         '#weight' => -100,
       ];
       $form['actions']['submit']['#ajax'] = [

@@ -4,6 +4,7 @@ namespace Drupal\contact_tools;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Main class for all snippets and helpers.
@@ -30,20 +31,22 @@ class ContactTools {
       'attributes' => [
         'class' => ['use-ajax'],
         'data-dialog-type' => 'modal',
-        'data-dialog-options' => Json::encode([
+        'data-dialog-options' => [
           'width' => 'auto',
-        ]),
+        ],
         'rel' => 'nofollow',
       ],
     ];
 
-    $link_options = array_merge($link_options_defaults, $link_options);
+    $link_options_merged = array_merge_recursive($link_options_defaults, $link_options);
+    // Modal settings must be in json format.
+    $link_options_merged['attributes']['data-dialog-options'] = Json::encode($link_options_merged['attributes']['data-dialog-options']);
 
     return [
       '#type' => 'link',
       '#title' => $link_title,
       '#url' => Url::fromRoute('entity.contact_form.canonical', ['contact_form' => $contact_form], $url_options),
-      '#options' => $link_options,
+      '#options' => $link_options_merged,
       '#attached' => ['library' => ['core/drupal.dialog.ajax']],
     ];
   }
@@ -68,22 +71,49 @@ class ContactTools {
       'attributes' => [
         'class' => ['use-ajax'],
         'data-dialog-type' => 'modal',
-        'data-dialog-options' => Json::encode([
+        'data-dialog-options' => [
           'width' => 'auto',
-        ]),
+        ],
         'rel' => 'nofollow',
       ],
     ];
 
-    $link_options = array_merge($link_options_defaults, $link_options);
+    $link_options_merged = array_merge_recursive($link_options_defaults, $link_options);
+    // Modal settings must be in json format.
+    $link_options_merged['attributes']['data-dialog-options'] = Json::encode($link_options_merged['attributes']['data-dialog-options']);
 
     return [
       '#type' => 'link',
       '#title' => $link_title,
       '#url' => Url::fromRoute('contact_tools.contact_form_ajax.page', ['contact_form' => $contact_form], $url_options),
-      '#options' => $link_options,
+      '#options' => $link_options_merged,
       '#attached' => ['library' => ['core/drupal.dialog.ajax']],
     ];
+  }
+
+  /**
+   * @param string $contact_form_id
+   *
+   * @return array Renderable array with form.
+   * Renderable array with form.
+   */
+  public static function getFormAjax($contact_form_id = 'default_form') {
+    $contact_form = \Drupal::entityTypeManager()
+      ->getStorage('contact_message')
+      ->create([
+        'contact_form' => $contact_form_id,
+      ]);
+    // Ajax is added by hook_form_alter(). Because here we can't change any of
+    // actions of the form.
+    $form_state_additional = [
+      'contact_tools' => [
+        'is_ajax' => TRUE,
+      ],
+    ];
+    $form = \Drupal::service('entity.form_builder')->getForm($contact_form, 'default', $form_state_additional);
+    $form['#title'] = $contact_form->label();
+    $form['#cache']['contexts'][] = 'user.permissions';
+    return $form;
   }
 
 }

@@ -17,6 +17,7 @@ class ContactToolsAjaxController extends ControllerBase {
    * {@inheritdoc}
    */
   public static function ajaxSubmitHandler(array &$form, FormStateInterface $form_state) {
+    $form_state->setRebuild();
     $ajax_response = new AjaxResponse();
     $message = [
       '#theme' => 'status_messages',

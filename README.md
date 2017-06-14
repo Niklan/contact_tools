@@ -2,6 +2,12 @@
 
 Module for Drupal 8 which provide some helpers to work with contact module forms.
 
+## TODO
+
+- Refactor code, unify arguments for ContactTools.
+- Rework ajax forms and callback to update entire form, not just push the messages.
+- Update docs and examples to actual data.
+
 ## Call service
 
 All provided tools is now accessible via service `contact_tools`.
