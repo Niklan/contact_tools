@@ -3,6 +3,8 @@
 namespace Drupal\contact_tools;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Html;
+use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -98,7 +100,7 @@ class ContactTools {
    * Renderable array with form.
    */
   public static function getFormAjax($contact_form_id = 'default_form') {
-    $contact_form = \Drupal::entityTypeManager()
+    $contact_message = \Drupal::entityTypeManager()
       ->getStorage('contact_message')
       ->create([
         'contact_form' => $contact_form_id,
@@ -110,8 +112,8 @@ class ContactTools {
         'is_ajax' => TRUE,
       ],
     ];
-    $form = \Drupal::service('entity.form_builder')->getForm($contact_form, 'default', $form_state_additional);
-    $form['#title'] = $contact_form->label();
+    $form = \Drupal::service('entity.form_builder')->getForm($contact_message, 'default', $form_state_additional);
+    $form['#title'] = $contact_message->label();
     $form['#cache']['contexts'][] = 'user.permissions';
     return $form;
   }

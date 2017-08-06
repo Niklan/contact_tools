@@ -5,11 +5,3 @@ contact_tools.contact_form_ajax.page:
     _controller: '\Drupal\contact_tools\Controller\ContactToolsPageController::contactPageAjax'
   requirements:
     _entity_access: 'contact_form.view'
-
-contact_tools.contact_form_ajax.callback:
-  path: '/contact-tools-ajax'
-  defaults:
-    _title: 'Contact'
-    _controller: '\Drupal\contact_tools\Controller\ContactToolsAjaxController::ajaxSubmitHandler'
-  requirements:
-    _entity_access: 'contact_form.view'

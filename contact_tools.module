@@ -4,32 +4,57 @@
  * @file
  * Main file for hooks and custom functions.
  */
-use Drupal\Component\Utility\Html;
+
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_BASE_FORM_ID_alter().
  */
-function contact_tools_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function contact_tools_form_contact_message_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   $storage = $form_state->getStorage();
 
-  if (isset($storage['contact_tools'])) {
-    if ($storage['contact_tools']['is_ajax']) {
-      // @TODO rewrite code to update entire form.
-      //$message_wrapper_id = Html::getUniqueId($form['#form_id'] . '-system-messages');
+  if (isset($storage['contact_tools']) && $storage['contact_tools']['is_ajax']) {
+    $form['#prefix'] = '<div id="contact-form-' . $form['#build_id'] . '">';
+    $form['#suffix'] = '</div>';
 
-      $form['system_messages'] = [
-        '#type' => 'item',
-        '#markup' => '',
-        '#id' => Html::getClass($form['#form_id']) . '-system-messages',
-        '#weight' => -100,
-      ];
-      $form['actions']['submit']['#ajax'] = [
-        'callback' => 'Drupal\contact_tools\Controller\ContactToolsAjaxController::ajaxSubmitHandler',
-        'event' => 'click',
-        'progress' => [
-          'type' => 'throbber',
-        ],
-      ];
-    }
+    $form['system_messages'] = [
+      '#type' => 'item',
+      '#id' => 'contact-form-messages-' . $form['#build_id'],
+      '#weight' => -100,
+    ];
+    $form['actions']['submit']['#ajax'] = [
+      'callback' => 'contact_tools_ajax_submit_handler',
+      'event' => 'click',
+      'progress' => [
+        'type' => 'throbber',
+      ],
+    ];
   }
+}
+
+/**
+ * @param array              $form
+ * @param FormStateInterface $form_state
+ *
+ * @return AjaxResponse
+ */
+function contact_tools_ajax_submit_handler(array &$form, FormStateInterface $form_state) {
+  $form_state->setRebuild();
+  $messages = [
+    '#theme' => 'status_messages',
+    '#message_list' => drupal_get_messages(),
+    '#status_headings' => [
+      'status' => t('Status message'),
+      'error' => t('Error message'),
+      'warning' => t('Warning message'),
+    ],
+    '#weight' => -100,
+  ];
+
+  $ajax_response = new AjaxResponse();
+  $ajax_response->addCommand(new ReplaceCommand('#contact-form-' . $form['#build_id_old'], $form));
+  $ajax_response->addCommand(new ReplaceCommand('#contact-form-messages-' . $form['#build_id'], $messages));
+  return $ajax_response;
 }
