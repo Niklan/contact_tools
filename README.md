@@ -2,15 +2,9 @@
 
 Module for Drupal 8 which provide some helpers to work with contact module forms.
 
-## TODO
+## Service
 
-- Refactor code, unify arguments for ContactTools.
-- Rework ajax forms and callback to update entire form, not just push the messages.
-- Update docs and examples to actual data.
-
-## Call service
-
-All provided tools is now accessible via service `contact_tools`.
+All provided tools is accessible via service `contact_tools`.
 
 ```php
 $contact_tools = \Drupal::service('contact_tools');
@@ -18,7 +12,13 @@ $contact_tools = \Drupal::service('contact_tools');
 
 After that you can call all methods.
 
-### createModalLink($link_title, $contact_form, $url_options = [], $modal_options = [])
+### createModalLinkAjax() / createModalLink($link_title, $contact_form, $link_options = [], $url_options = [])
+
+The main difference of those two method, that one of it load form with AJAX, another
+load just form in modal. They have same arguments.
+
+- `$link_options`: there is most usable data. Here you can pass attributes for link,
+additional query parameters and modal data attributes with settings.
 
 Return renderable array type 'link' which will open contact form in Modal window.
 
@@ -38,11 +38,12 @@ $link_options_defaults = [
 
 You can modify it by provided additional settings and\or replace default ones.
 
+
 #### Example 1
 
 ```php
 $contact_tools = \Drupal::service('contact_tools');
-return $contact_tools::createModalLink('Call me', 'callback');
+return $contact_tools::createModalLinkAjax('Call me', 'callback');
 ```
 
 #### Example 2
@@ -51,19 +52,63 @@ Pass some values to the form via query.
 
 ```php
 $contact_tools = \Drupal::service('contact_tools');
-return $contact_tools::createModalLink('Call me', 'callback', ['query' => ['product' => $node->id()]]);
+return $contact_tools::createModalLinkAjax('Call me', 'callback', ['query' => ['product' => $node->id()]]);
 ```
 
-## Contact tools filter
+#### Example 3
+
+Get ajax form render array.
+
+```php
+$contact_tools = \Drupal::service('contact_tools');
+return $contact_tools->getFormAjax('feedback');
+```
+
+## Filter
 
 ### modalLink
 
 ```html
-[contact]{"type": "modalLink", "link_title": "Call me", "contact_form": "callback"}[/contact]
+[contact]{"type": "modalLink", "contact_form": "callback", "link_title": "Call me!", "link_options": {"attributes":{"class":["callback-link"]}}}[/contact]
 ```
 
 ### modalLinkAjax
 
 ```html
-[contact]{"type": "modalLinkAjax", "link_title": "Call me", "contact_form": "callback"}[/contact]
+[contact]{"type": "modalLinkAjax", "contact_form": "callback", "link_title": "Call me!", "link_options": {"attributes":{"class":["callback-link"]}}}[/contact]
+```
+
+## Twig
+
+Module also provides Twig functions as well!
+
+### contact_form_ajax()
+
+Load contact form with ajax support.
+
+#### Example 1
+
+```twig
+{{ contact_form_ajax('feedback') }}
+```
+
+### contact_modal() and contact_modal_ajax()
+
+As above, they are the same, just one with ajax.
+
+#### Example 1
+
+```twig
+{{ contact_modal_ajax('Call me!', 'callback') }}
+```
+
+#### Example 2
+
+```twig
+{% set link_options = {
+  query: {
+    service: node.nid
+  }
+} %}
+{{ contact_modal_ajax('Call me!', 'callback', link_options) }}
 ```
