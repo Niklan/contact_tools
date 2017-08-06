@@ -18,17 +18,17 @@ class ContactTools {
    *   The title of the link.
    * @param       $contact_form
    *   The machine name of contact form needed to be loaded in modal.
-   * @param array $url_options
-   *   (optional) An array of options. Mainly used for pass GET parameters.
-   *   See Url::fromUri() for details.
    * @param array $link_options
    *   (optional) An array of options. Here must be passed all settings for
    *   modal window. See Url::fromUri() for details.
+   * @param array $url_options
+   *   (optional) An array of options. Mainly used for pass GET parameters.
+   *   See Url::fromUri() for details
    *
    * @return array
    *   Renderable array with link.
    */
-  public static function createModalLink($link_title, $contact_form, $url_options = [], $link_options = []) {
+  public static function createModalLink($link_title, $contact_form, $link_options = [], $url_options = []) {
     $link_options_defaults = [
       'attributes' => [
         'class' => ['use-ajax'],
@@ -58,17 +58,17 @@ class ContactTools {
    *   The title of the link.
    * @param       $contact_form
    *   The machine name of contact form needed to be loaded in modal.
-   * @param array $url_options
-   *   (optional) An array of options. Mainly used for pass GET parameters.
-   *   See Url::fromUri() for details.
    * @param array $link_options
    *   (optional) An array of options. Here must be passed all settings for
    *   modal window. See Url::fromUri() for details.
+   * @param array $url_options
+   *   (optional) An array of options. Mainly used for pass GET parameters.
+   *   See Url::fromUri() for details.
    *
    * @return array
    *   Renderable array with link.
    */
-  public static function createModalLinkAjax($link_title, $contact_form, $url_options = [], $link_options = []) {
+  public static function createModalLinkAjax($link_title, $contact_form, $link_options = [], $url_options = []) {
     $link_options_defaults = [
       'attributes' => [
         'class' => ['use-ajax'],

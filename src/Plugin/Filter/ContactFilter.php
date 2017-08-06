@@ -37,14 +37,14 @@ class ContactFilter extends FilterBase {
           case 'modalLink':
             $url_options = !empty($settings['url_options']) ? $settings['url_options'] : [];
             $link_options = !empty($settings['link_options']) ? $settings['link_options'] : [];
-            $link = $contact_tools::createModalLink($settings['link_title'], $settings['contact_form'], $url_options, $link_options);
+            $link = $contact_tools::createModalLink($settings['link_title'], $settings['contact_form'], $link_options, $url_options);
             $replace = render($link);
             break;
 
           case 'modalLinkAjax':
             $url_options = !empty($settings['url_options']) ? $settings['url_options'] : [];
             $link_options = !empty($settings['link_options']) ? $settings['link_options'] : [];
-            $link = $contact_tools::createModalLinkAjax($settings['link_title'], $settings['contact_form'], $url_options, $link_options);
+            $link = $contact_tools::createModalLinkAjax($settings['link_title'], $settings['contact_form'], $link_options, $url_options);
             $replace = render($link);
             break;
 

@@ -16,12 +16,15 @@ function contact_tools_form_contact_message_form_alter(&$form, \Drupal\Core\Form
   $storage = $form_state->getStorage();
 
   if (isset($storage['contact_tools']) && $storage['contact_tools']['is_ajax']) {
-    $form['#prefix'] = '<div id="contact-form-' . $form['#build_id'] . '">';
+    $form['#prefix'] = '<div id="contact-form-' . $form['#build_id'] . '" class="contact-message-form">';
     $form['#suffix'] = '</div>';
 
     $form['system_messages'] = [
       '#type' => 'item',
       '#id' => 'contact-form-messages-' . $form['#build_id'],
+      '#attributes' => [
+        'class' => 'contact-form-messages',
+      ],
       '#weight' => -100,
     ];
     $form['actions']['submit']['#ajax'] = [
