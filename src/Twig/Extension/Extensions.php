@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\contact_tools;
+namespace Drupal\contact_tools\Twig\Extension;
 
 /**
  * Custom twig function for contact tools.
  */
-class TwigExtension extends \Twig_Extension {
+class Extensions extends \Twig_Extension {
 
   /**
    * {@inheritdoc}

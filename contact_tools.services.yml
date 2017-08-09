@@ -1,7 +1,7 @@
 services:
   contact_tools:
-    class: Drupal\contact_tools\ContactTools
+    class: Drupal\contact_tools\Service\ContactTools
   contact_tools.twig_extension:
-    class: Drupal\contact_tools\TwigExtension
+    class: Drupal\contact_tools\Twig\Extension\Extensions
     tags:
       - { name: twig.extension }

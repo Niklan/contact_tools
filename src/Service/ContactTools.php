@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\contact_tools;
+namespace Drupal\contact_tools\Service;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
