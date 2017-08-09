@@ -15,7 +15,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
  * ajax modal is 'default-ajax', you can pass your own keys to add special
  * behavior.
  */
-function dummy_contact_tools_modal_link_options_alter(array &$link_options, array &$url_options, $key) {
+function hook_contact_tools_modal_link_options_alter(array &$link_options, array &$url_options, $key) {
   switch ($key) {
     case 'default':
     case 'default-ajax':
@@ -34,7 +34,7 @@ function dummy_contact_tools_modal_link_options_alter(array &$link_options, arra
  * Allows modules to alter AJAX response handled by the module. You can fully
  * alter, remove and add new commands to response.
  */
-function contact_tools_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &$ajax_response, $form, Drupal\Core\Form\FormStateInterface $form_state) {
+function hook_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &$ajax_response, $form, Drupal\Core\Form\FormStateInterface $form_state) {
   if ($form_state->isSubmitted()) {
     $ajax_response->addCommand(new ReplaceCommand('#contact-form-' . $form['#build_id'], t('Thank you for your submission!')));
   }
