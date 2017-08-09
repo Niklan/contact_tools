@@ -12,11 +12,14 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
-function contact_tools_form_contact_message_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function contact_tools_form_contact_message_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $storage = $form_state->getStorage();
 
   if (isset($storage['contact_tools']) && $storage['contact_tools']['is_ajax']) {
-    $form['#prefix'] = '<div id="contact-form-' . $form['#build_id'] . '" class="contact-message-form">';
+    $classes_array = $form['#attributes']['class'];
+    $classes_array[] = 'contact-tools-wrapper';
+    $classes = implode(' ', $classes_array);
+    $form['#prefix'] = '<div id="contact-form-' . $form['#build_id'] . '" class="' . $classes . '">';
     $form['#suffix'] = '</div>';
 
     $form['system_messages'] = [
@@ -38,10 +41,7 @@ function contact_tools_form_contact_message_form_alter(&$form, \Drupal\Core\Form
 }
 
 /**
- * @param array              $form
- * @param FormStateInterface $form_state
- *
- * @return AjaxResponse
+ * Ajax submit handler for contact form called with AJAX support.
  */
 function contact_tools_ajax_submit_handler(array &$form, FormStateInterface $form_state) {
   $form_state->setRebuild();
@@ -59,5 +59,16 @@ function contact_tools_ajax_submit_handler(array &$form, FormStateInterface $for
   $ajax_response = new AjaxResponse();
   $ajax_response->addCommand(new ReplaceCommand('#contact-form-' . $form['#build_id_old'], $form));
   $ajax_response->addCommand(new ReplaceCommand('#contact-form-messages-' . $form['#build_id'], $messages));
+  \Drupal::moduleHandler()->alter('contact_tools_ajax_response', $ajax_response, $form, $form_state);
   return $ajax_response;
+}
+
+
+/**
+ * Implements hook_contact_tools_ajax_response_alter().
+ */
+function contact_tools_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &$ajax_response, $form, Drupal\Core\Form\FormStateInterface $form_state) {
+  if ($form_state->isSubmitted()) {
+    $ajax_response->addCommand(new ReplaceCommand('#contact-form-' . $form['#build_id'], t('Thank you for your submission!')));
+  }
 }
