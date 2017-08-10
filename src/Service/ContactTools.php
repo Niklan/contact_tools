@@ -37,7 +37,7 @@ class ContactTools {
    */
   public function createModalLink($link_title, $contact_form, $link_options = [], $url_options = [], $key = 'default') {
     $link_options_merged = $this->mergeLinkOptions($this->getLinkOptionsDefault(), $link_options);
-    $this->modalLinkOptionsAlter($link_options, $url_options, $key);
+    $this->modalLinkOptionsAlter($link_options_merged, $url_options, $key);
     // Modal settings must be in json format.
     $link_options_merged['attributes']['data-dialog-options'] = Json::encode($link_options_merged['attributes']['data-dialog-options']);
 
@@ -72,7 +72,7 @@ class ContactTools {
    */
   public function createModalLinkAjax($link_title, $contact_form, $link_options = [], $url_options = [], $key = 'default-ajax') {
     $link_options_merged = $this->mergeLinkOptions($this->getLinkOptionsDefault(), $link_options);
-    $this->modalLinkOptionsAlter($link_options, $url_options, $key);
+    $this->modalLinkOptionsAlter($link_options_merged, $url_options, $key);
     // Modal settings must be in json format.
     $link_options_merged['attributes']['data-dialog-options'] = Json::encode($link_options_merged['attributes']['data-dialog-options']);
 

@@ -46,6 +46,7 @@ function contact_tools_form_contact_message_form_alter(&$form, FormStateInterfac
  */
 function contact_tools_ajax_submit_handler(array &$form, FormStateInterface $form_state) {
   $form_state->setRebuild();
+  $contact_form_bundle = $form_state->getFormObject()->getEntity()->bundle();
   $messages = [
     '#theme' => 'status_messages',
     '#message_list' => drupal_get_messages(),
@@ -63,6 +64,10 @@ function contact_tools_ajax_submit_handler(array &$form, FormStateInterface $for
   $ajax_response->addCommand(new InvokeCommand('#contact-form-' . $form['#build_id_old'], 'focus'));
   $ajax_response->addCommand(new ReplaceCommand('#contact-form-' . $form['#build_id_old'], $form));
   $ajax_response->addCommand(new ReplaceCommand('#contact-form-messages-' . $form['#build_id'], $messages));
-  \Drupal::moduleHandler()->alter('contact_tools_ajax_response', $ajax_response, $form, $form_state);
+  $hook_alters = [
+    'contact_tools_ajax_response',
+    'contact_tools_' . $contact_form_bundle . '_ajax_response',
+  ];
+  \Drupal::moduleHandler()->alter($hook_alters, $ajax_response, $form, $form_state);
   return $ajax_response;
 }
