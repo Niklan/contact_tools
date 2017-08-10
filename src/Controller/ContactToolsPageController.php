@@ -37,6 +37,7 @@ class ContactToolsPageController extends ControllerBase {
    */
   public function contactPageAjax(ContactFormInterface $contact_form = NULL) {
     $config = $this->config('contact.settings');
+    $query = \Drupal::request()->query;
 
     // Use the default form if no form has been passed.
     if (empty($contact_form)) {
@@ -69,8 +70,12 @@ class ContactToolsPageController extends ControllerBase {
         'is_ajax' => TRUE,
       ],
     ];
+    $title = $contact_form->label();
+    if ($query->get('modal-title') && is_string($query->get('modal-title'))) {
+      $title = $query->get('modal-title');
+    }
     $form = $this->entityFormBuilder()->getForm($message, 'default', $form_state_additional);
-    $form['#title'] = $contact_form->label();
+    $form['#title'] = $title;
     $form['#cache']['contexts'][] = 'user.permissions';
     $this->renderer->addCacheableDependency($form, $config);
     return $form;

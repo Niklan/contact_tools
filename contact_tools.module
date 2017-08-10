@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -57,18 +58,11 @@ function contact_tools_ajax_submit_handler(array &$form, FormStateInterface $for
   ];
 
   $ajax_response = new AjaxResponse();
+  // This command fix focus jumps on the page is there is multiple forms.
+  // @see /core/misc/ajax.js:861-884
+  $ajax_response->addCommand(new InvokeCommand('#contact-form-' . $form['#build_id_old'], 'focus'));
   $ajax_response->addCommand(new ReplaceCommand('#contact-form-' . $form['#build_id_old'], $form));
   $ajax_response->addCommand(new ReplaceCommand('#contact-form-messages-' . $form['#build_id'], $messages));
   \Drupal::moduleHandler()->alter('contact_tools_ajax_response', $ajax_response, $form, $form_state);
   return $ajax_response;
-}
-
-
-/**
- * Implements hook_contact_tools_ajax_response_alter().
- */
-function contact_tools_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &$ajax_response, $form, Drupal\Core\Form\FormStateInterface $form_state) {
-  if ($form_state->isSubmitted()) {
-    $ajax_response->addCommand(new ReplaceCommand('#contact-form-' . $form['#build_id'], t('Thank you for your submission!')));
-  }
 }
