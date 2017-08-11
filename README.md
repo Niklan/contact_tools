@@ -61,9 +61,9 @@ This methods generate '#link' which will load form in the modal on click. You ca
     'attributes' => [
       'class' => ['use-ajax'],
       'data-dialog-type' => 'modal',
-      'data-dialog-options' => Json::encode([
+      'data-dialog-options' => [
         'width' => 'auto',
-      ]),
+      ],
     ],
   ];
   ```

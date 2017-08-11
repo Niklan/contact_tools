@@ -35,21 +35,26 @@ class ContactFilter extends FilterBase {
 
         switch ($settings['type']) {
           case 'modalLink':
-            $url_options = !empty($settings['url_options']) ? $settings['url_options'] : [];
             $link_options = !empty($settings['link_options']) ? $settings['link_options'] : [];
-            $link = $contact_tools::createModalLink($settings['link_title'], $settings['contact_form'], $link_options, $url_options);
+            $key = !empty($settings['ke']) ? $settings['key'] : 'default';
+            $link = $contact_tools->createModalLink($settings['link_title'], $settings['contact_form'], $link_options, $key);
             $replace = render($link);
             break;
 
           case 'modalLinkAjax':
-            $url_options = !empty($settings['url_options']) ? $settings['url_options'] : [];
             $link_options = !empty($settings['link_options']) ? $settings['link_options'] : [];
-            $link = $contact_tools::createModalLinkAjax($settings['link_title'], $settings['contact_form'], $link_options, $url_options);
+            $key = !empty($settings['key']) ? $settings['key'] : 'default-ajax';
+            $link = $contact_tools->createModalLinkAjax($settings['link_title'], $settings['contact_form'], $link_options, $key);
             $replace = render($link);
             break;
 
+          case 'getForm':
+            $form = $contact_tools->getForm($settings['contact_form']);
+            $replace = render($form);
+            break;
+
           case 'getFormAjax':
-            $form = $contact_tools::getFormAjax($settings['contact_form']);
+            $form = $contact_tools->getFormAjax($settings['contact_form']);
             $replace = render($form);
             break;
         }
@@ -66,7 +71,7 @@ class ContactFilter extends FilterBase {
    * {@inheritdoc}
    */
   public function tips($long = FALSE) {
-    return $this->t('[contact]{"type": "modalLink", "form": "feedback", "title": "Test"}[/contact] will be replaced with link to contact form opened in modal.');
+    return $this->t('[contact]{"type": "modalLinkAjax", "contact_form": "feedback", "link_title": "Test"}[/contact] will be replaced with link to contact form opened in modal.');
   }
 
 }

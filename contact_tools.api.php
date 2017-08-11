@@ -15,7 +15,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
  * ajax modal is 'default-ajax', you can pass your own keys to add special
  * behavior.
  */
-function hook_contact_tools_modal_link_options_alter(array &$link_options, array &$url_options, $key) {
+function hook_contact_tools_modal_link_options_alter(array &$link_options, $key) {
   switch ($key) {
     case 'default':
     case 'default-ajax':

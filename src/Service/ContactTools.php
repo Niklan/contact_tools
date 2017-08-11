@@ -26,25 +26,22 @@ class ContactTools {
    *   form supports for modal API via data-dialog-options attribute. You can
    *   pass personal settings according to jQuery Dialog Widget. See
    *   http://api.jqueryui.com/dialog/ for details.
-   * @param array $url_options
-   *   (optional) An array of options to pass to url as $options. See
-   *   Url::fromRoute() for details.
    * @param string $key
    *   This key will be used for hook_contact_tools_modal_link_options_alter().
    *
    * @return array
    *   Renderable array with link.
    */
-  public function createModalLink($link_title, $contact_form, $link_options = [], $url_options = [], $key = 'default') {
+  public function createModalLink($link_title, $contact_form, array $link_options = [], $key = 'default') {
     $link_options_merged = $this->mergeLinkOptions($this->getLinkOptionsDefault(), $link_options);
-    $this->modalLinkOptionsAlter($link_options_merged, $url_options, $key);
+    $this->modalLinkOptionsAlter($link_options_merged, $key);
     // Modal settings must be in json format.
     $link_options_merged['attributes']['data-dialog-options'] = Json::encode($link_options_merged['attributes']['data-dialog-options']);
 
     return [
       '#type' => 'link',
       '#title' => $link_title,
-      '#url' => Url::fromRoute('entity.contact_form.canonical', ['contact_form' => $contact_form], $url_options),
+      '#url' => Url::fromRoute('entity.contact_form.canonical', ['contact_form' => $contact_form], []),
       '#options' => $link_options_merged,
       '#attached' => ['library' => ['core/drupal.dialog.ajax']],
     ];
@@ -63,23 +60,20 @@ class ContactTools {
    *   form supports for modal API via data-dialog-options attribute. You can
    *   pass personal settings according to jQuery Dialog Widget. See
    *   http://api.jqueryui.com/dialog/ for details.
-   * @param array $url_options
-   *   (optional) An array of options to pass to url as $options. See
-   *   Url::fromRoute() for details.
    *
    * @return array
    *   Renderable array with link.
    */
-  public function createModalLinkAjax($link_title, $contact_form, $link_options = [], $url_options = [], $key = 'default-ajax') {
+  public function createModalLinkAjax($link_title, $contact_form, array $link_options = [], $key = 'default-ajax') {
     $link_options_merged = $this->mergeLinkOptions($this->getLinkOptionsDefault(), $link_options);
-    $this->modalLinkOptionsAlter($link_options_merged, $url_options, $key);
+    $this->modalLinkOptionsAlter($link_options_merged, $key);
     // Modal settings must be in json format.
     $link_options_merged['attributes']['data-dialog-options'] = Json::encode($link_options_merged['attributes']['data-dialog-options']);
 
     return [
       '#type' => 'link',
       '#title' => $link_title,
-      '#url' => Url::fromRoute('contact_tools.contact_form_ajax.page', ['contact_form' => $contact_form], $url_options),
+      '#url' => Url::fromRoute('contact_tools.contact_form_ajax.page', ['contact_form' => $contact_form], []),
       '#options' => $link_options_merged,
       '#attached' => ['library' => ['core/drupal.dialog.ajax']],
     ];
@@ -99,7 +93,7 @@ class ContactTools {
       ]);
 
     $form = \Drupal::service('entity.form_builder')
-      ->getForm($contact_message, 'default');
+      ->getForm($contact_message, 'default', []);
     $form['#title'] = $contact_message->label();
     $form['#cache']['contexts'][] = 'user.permissions';
     return $form;
@@ -134,14 +128,14 @@ class ContactTools {
   /**
    * Define hook_contact_tools_modal_link_options_alter().
    *
-   * Allow modules to alter options for link and url via hook. Can be handful
+   * Allow modules to alter options for link via hook. Can be handful
    * when link is called via twig or filter, the most of data can be set via
    * hooks by the key. Can be used to set default settings for needed set of
    * forms.
    */
-  protected function modalLinkOptionsAlter(array &$link_options, array &$url_options, $key) {
+  protected function modalLinkOptionsAlter(array &$link_options, $key) {
     \Drupal::moduleHandler()
-      ->alter('contact_tools_modal_link_options', $link_options, $url_options, $key);
+      ->alter('contact_tools_modal_link_options', $link_options, $key);
   }
 
   /**

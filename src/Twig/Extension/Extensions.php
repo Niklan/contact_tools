@@ -40,17 +40,17 @@ class Extensions extends \Twig_Extension {
   /**
    * Return form render array with AJAX support.
    */
-  public function contactModal($link_title, $contact_form, $url_options = [], $link_options = [], $key = 'default') {
+  public function contactModal($link_title, $contact_form, $link_options = [], $key = 'default') {
     $contact_tools = \Drupal::service('contact_tools');
-    return $contact_tools->createModalLink($link_title, $contact_form, $url_options, $link_options, $key);
+    return $contact_tools->createModalLink($link_title, $contact_form, $link_options, $key);
   }
 
   /**
    * Return form render array with AJAX support.
    */
-  public function contactModalAjax($link_title, $contact_form, $url_options = [], $link_options = [], $key = 'default-ajax') {
+  public function contactModalAjax($link_title, $contact_form, $link_options = [], $key = 'default-ajax') {
     $contact_tools = \Drupal::service('contact_tools');
-    return $contact_tools->createModalLinkAjax($link_title, $contact_form, $url_options, $link_options, $key);
+    return $contact_tools->createModalLinkAjax($link_title, $contact_form, $link_options, $key);
   }
 
 }
