@@ -75,7 +75,7 @@ This methods generate '#link' which will load form in the modal on click. You ca
 $contact_tools = \Drupal::service('contact_tools');
 
 // Link which open contact tools in modal without AJAX handler.
-$feedback_in_modal = $contact_tools->reateModalLinkAjax('Write to use!', 'feedback');
+$feedback_in_modal = $contact_tools->createModalLinkAjax('Write to use!', 'feedback');
 
 // Link which open contact form in modal with AJAX submit handler.
 $callback_link = $contact_tools->createModalLinkAjax('Call me', 'callback');
