@@ -46,7 +46,7 @@ function hook_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &
  * Allows modules to alter AJAX response handled by the module. You can fully
  * alter, remove and add new commands to response.
  *
- * This hook onlly apply for specified contact form name. You must pass only
+ * This hook only apply for specified contact form name. You must pass only
  * machine name of contact form. F.e. is form has form_id
  * "contact_message_feedback_form" so form name here is "feedback". In other
  * words, this is bundle name of the contact_message entity.
