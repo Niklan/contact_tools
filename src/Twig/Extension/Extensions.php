@@ -8,6 +8,15 @@ namespace Drupal\contact_tools\Twig\Extension;
 class Extensions extends \Twig_Extension {
 
   /**
+   * Returns the name of the extension.
+   *
+   * @return string The extension name
+   */
+  public function getName() {
+    return 'contact_tools';
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getFunctions() {
