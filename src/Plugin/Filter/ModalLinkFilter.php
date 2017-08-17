@@ -11,7 +11,7 @@ use Drupal\filter\FilterProcessResult;
  * @Filter(
  *   id = "contact_tools_modal_link",
  *   title = @Translation("Contact Tools modal links"),
- *   description = @Translation("Attach Modal API to links with href="/contact-tools/CONTACT_FORM"."),
+ *   description = @Translation("Attach Modal API to links with href='/contact-tools/CONTACT_FORM'."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
  * )
  */

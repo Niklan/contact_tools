@@ -1,6 +1,6 @@
 # Contact Tools
 
-This module is pack of tools for working with Drupal 8 core Conatact module forms.
+This module is pack of tools for working with Drupal 8 core Contact module forms.
 
 ## Table of contents:
 
@@ -16,7 +16,7 @@ This module is pack of tools for working with Drupal 8 core Conatact module form
 ## Service
 
 This module based on own service, that can done everything described below. The service
-can help you when you work from PHP. To call servce just use:
+can help you when you work from PHP. To call service just use:
 
 ```php
 $contact_tools = \Drupal::service('contact_tools');
@@ -28,11 +28,11 @@ After that you can call all methods.
 
 ### getForm() and getFormAjax()
 
-This two method generate `$form` render array with specified contact form and return it for your feture needs.
+Those two method generate `$form` render array with specified contact form and return it for your further needs.
 
 #### Parameters
 
-- `$contact_form_id = 'default_form'`: (optional) contact form bundle name which you want to load. If none is pass, will be loaded default contact form which can be selected via contact admin settings.
+- `$contact_form_id = 'default_form'`: (optional) contact form bundle name which you want to load. If not passes, will be loaded default contact form which can be selected via contact admin settings.
 
 #### Example
 
@@ -175,7 +175,7 @@ Twig is awsome and used alot in Drupal theming. Module is providing Twig functio
 
 ## Hooks
 
-There is several hooks that can be handful in some cases.
+There are several hooks that can be handful in some cases.
 
 ### hook_contact_tools_modal_link_options_alter()
 
@@ -216,6 +216,7 @@ function hook_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &
     $ajax_response->addCommand(new ReplaceCommand('#contact-form-' . $form['#build_id'], t('Thank you for your submission!')));
   }
 }
+
 /**
  * Implements hook_contact_tools_CONTACT_NAME_ajax_response_alter().
  *
