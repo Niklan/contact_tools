@@ -24,12 +24,7 @@ class ModalLinkFilter extends FilterBase {
     $result = new FilterProcessResult($text);
     $dom = new DOMDocument(NULL, 'UTF-8');
     $dom->encoding = 'UTF-8';
-    // Suppress errors about invalid HTML. Because text doesn't has
-    // <!DOCTYPE html> this is throw errors if detect invalid html tags without
-    // it.
-    libxml_use_internal_errors(TRUE);
-    $dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-    libxml_use_internal_errors(FALSE);
+    $dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'));
     $links = $dom->getElementsByTagName('a');
 
     foreach ($links as $link) {
