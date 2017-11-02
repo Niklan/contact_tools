@@ -41,14 +41,15 @@ class ContactToolsPageController extends ControllerBase {
 
     // Use the default form if no form has been passed.
     if (empty($contact_form)) {
-      $contact_form = $this->entityManager()
+      $contact_form = $this->entityTypeManager()
         ->getStorage('contact_form')
         ->load($config->get('default_form'));
       // If there are no forms, do not display the form.
       if (empty($contact_form)) {
         if ($this->currentUser()->hasPermission('administer contact forms')) {
           drupal_set_message($this->t('The contact form has not been configured. <a href=":add">Add one or more forms</a> .', [
-            ':add' => $this->url('contact.form_add')]), 'error');
+            ':add' => $this->url('contact.form_add'),
+          ]), 'error');
           return [];
         }
         else {
@@ -57,7 +58,7 @@ class ContactToolsPageController extends ControllerBase {
       }
     }
 
-    $message = $this->entityManager()
+    $message = $this->entityTypeManager()
       ->getStorage('contact_message')
       ->create([
         'contact_form' => $contact_form->id(),
@@ -74,7 +75,8 @@ class ContactToolsPageController extends ControllerBase {
     if ($query->get('modal-title') && is_string($query->get('modal-title'))) {
       $title = $query->get('modal-title');
     }
-    $form = $this->entityFormBuilder()->getForm($message, 'default', $form_state_additional);
+    $form = $this->entityFormBuilder()
+      ->getForm($message, 'default', $form_state_additional);
     $form['#title'] = $title;
     $form['#cache']['contexts'][] = 'user.permissions';
     $this->renderer->addCacheableDependency($form, $config);
