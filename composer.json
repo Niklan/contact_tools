@@ -1,16 +1,17 @@
 {
-  "name": "drupal/admin_toolbar",
-  "description": "Admin Toolbar improve the default Drupal Toolbar, it lets the hover of sub menus.",
+  "name": "drupal/contact_tools",
+  "description": "Tools for developers to make work with core contact module easy and friendly.",
   "type": "drupal-module",
-  "homepage": "http://drupal.org/project/admin_toolbar",
+  "homepage": "http://drupal.org/project/contact_tools",
   "authors": [
     {
-      "name": "Mohamed Anis Taktak",
-      "homepage": "https://www.drupal.org/u/matio89"
+      "name": "Niklan (Nikita Malyshev)",
+      "email": "hello@niklan.net",
+      "homepage": "https://niklan.net"
     }
   ],
   "support": {
-    "issues": "https://www.drupal.org/project/issues/admin_toolbar"
+    "issues": "https://www.drupal.org/project/issues/contact_tools"
   },
   "license": "GPL-2.0+",
   "require": { }

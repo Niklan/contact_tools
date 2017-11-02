@@ -1,26 +1,24 @@
-<?php
+# Hooks
 
-/**
- * @file
- * Hook examples defined by this module.
- */
+There are several hooks that can be handful in some cases.
 
-use Drupal\Core\Ajax\RedirectCommand;
-use Drupal\Core\Ajax\ReplaceCommand;
+### hook_contact_tools_modal_link_options_alter()
 
+```php
 /**
  * Implements hook_contact_tools_modal_link_options_alter().
  *
  * Allows you to alter link and url options for modal links.
- *
- * @param array $link_options
- *   An array of options for modal window.
  */
-function hook_contact_tools_modal_link_options_alter(array &$link_options) {
+function hook_contact_tools_modal_link_options_alter(array &$link_options, $key) {
   $link_options['attributes']['data-dialog-options']['width'] = 600;
   $link_options['attributes']['data-dialog-options']['dialogClass'] = 'my-special-form';
 }
+```
 
+### hook_contact_tools_ajax_response_alter() and hook_contact_tools_CONTACT_NAME_ajax_response_alter()
+
+```php
 /**
  * Implements hook_contact_tools_ajax_response_alter().
  *
@@ -29,6 +27,8 @@ function hook_contact_tools_modal_link_options_alter(array &$link_options) {
  */
 function hook_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &$ajax_response, $form, Drupal\Core\Form\FormStateInterface $form_state) {
   if ($form_state->isSubmitted()) {
+    // This will replace whole form with this text. You can render something to 
+    // it!
     $ajax_response->addCommand(new ReplaceCommand('#contact-form-' . $form['#build_id'], t('Thank you for your submission!')));
   }
 }
@@ -50,3 +50,4 @@ function hook_contact_tools_CONTACT_NAME_ajax_response_alter(\Drupal\core\Ajax\A
     $ajax_response->addCommand(new RedirectCommand($base_url . '/submission-complete'));
   }
 }
+```
