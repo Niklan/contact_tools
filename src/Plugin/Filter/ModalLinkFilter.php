@@ -24,7 +24,7 @@ class ModalLinkFilter extends FilterBase {
     $result = new FilterProcessResult($text);
     $dom = new DOMDocument(NULL, 'UTF-8');
     $dom->encoding = 'UTF-8';
-    $dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'));
+    @$dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'));
     $links = $dom->getElementsByTagName('a');
 
     foreach ($links as $link) {
