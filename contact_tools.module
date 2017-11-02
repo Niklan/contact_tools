@@ -55,7 +55,7 @@ function contact_tools_ajax_submit_handler(array &$form, FormStateInterface $for
       'error' => t('Error message'),
       'warning' => t('Warning message'),
     ],
-    '#prefix' => '<div id="contact-form-messages-' . $form['#build_id']. '" class="contact-form-messages">',
+    '#prefix' => '<div id="contact-form-messages-' . $form['#build_id'] . '" class="contact-form-messages">',
     '#suffix' => '</div>',
   ];
 
@@ -69,6 +69,7 @@ function contact_tools_ajax_submit_handler(array &$form, FormStateInterface $for
     'contact_tools_ajax_response',
     'contact_tools_' . $contact_form_bundle . '_ajax_response',
   ];
-  \Drupal::moduleHandler()->alter($hook_alters, $ajax_response, $form, $form_state);
+  \Drupal::moduleHandler()
+    ->alter($hook_alters, $ajax_response, $form, $form_state);
   return $ajax_response;
 }

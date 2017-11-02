@@ -11,9 +11,13 @@ use Drupal\Core\Ajax\ReplaceCommand;
  * Implements hook_contact_tools_modal_link_options_alter().
  *
  * Allows you to alter link and url options for modal links.
+ *
+ * @param array $link_options
+ *   An array of options for modal window.
  */
 function hook_contact_tools_modal_link_options_alter(array &$link_options) {
-
+  $link_options['attributes']['data-dialog-options']['width'] = 600;
+  $link_options['attributes']['data-dialog-options']['dialogClass'] = 'my-special-form';
 }
 
 /**
