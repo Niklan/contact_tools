@@ -65,6 +65,7 @@ class ModalLinkFilter extends FilterBase {
     // DOMDocument is always adds <!DOCTYPE> and <html><body> tags. This is
     // invalidate the whole page.
     $text = preg_replace('~<(?:!DOCTYPE|/?(?:html|body))[^>]*>\s*~i', '', $dom->saveHTML());
+    $result->setProcessedText($text);
     return $result;
   }
 
