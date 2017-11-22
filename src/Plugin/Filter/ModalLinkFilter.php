@@ -62,8 +62,9 @@ class ModalLinkFilter extends FilterBase {
         $link->setAttribute('data-dialog-options', Json::encode($dialog_options));
       }
     }
-    $text = $dom->saveHTML();
-    $result->setProcessedText($text);
+    // DOMDocument is always adds <!DOCTYPE> and <html><body> tags. This is
+    // invalidate the whole page.
+    $text = preg_replace('~<(?:!DOCTYPE|/?(?:html|body))[^>]*>\s*~i', '', $dom->saveHTML());
     return $result;
   }
 
