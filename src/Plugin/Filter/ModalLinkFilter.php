@@ -59,6 +59,8 @@ class ModalLinkFilter extends FilterBase {
             'dialogClass' => 'contact-tools-modal',
           ];
         }
+        \Drupal::moduleHandler()
+          ->alter('contact_tools_modal_link_options', $dialog_options);
         $link->setAttribute('data-dialog-options', Json::encode($dialog_options));
       }
     }
