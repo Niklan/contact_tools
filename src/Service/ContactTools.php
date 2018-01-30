@@ -3,10 +3,7 @@
 namespace Drupal\contact_tools\Service;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\Html;
-use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Url;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Main class for all snippets and helpers.
@@ -135,7 +132,7 @@ class ContactTools {
    */
   protected function modalLinkOptionsAlter(array &$link_options) {
     \Drupal::moduleHandler()
-      ->alter('contact_tools_modal_link_options', $link_options);
+      ->alter('contact_tools_modal_link_options', $link_options['attributes']['data-dialog-options']);
   }
 
   /**
