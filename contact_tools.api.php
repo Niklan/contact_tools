@@ -12,13 +12,14 @@ use Drupal\Core\Ajax\ReplaceCommand;
  * Implements hook_contact_tools_modal_link_options_alter().
  *
  * Allows you to alter link and url options for modal links.
- * 
- * // @todo make in global to all options and pass form id to it.
  *
  * @param array $link_options
  *   An array of options for modal window.
+ * @param array $context
+ *   An array with additional information contains: contact form name, modal
+ *   link type and link title.
  */
-function hook_contact_tools_modal_link_options_alter(array &$link_options) {
+function hook_contact_tools_modal_link_options_alter(array &$link_options, array $context) {
   $link_options['width'] = 600;
   $link_options['dialogClass'] = 'my-special-form';
 }
@@ -30,7 +31,7 @@ function hook_contact_tools_modal_link_options_alter(array &$link_options) {
  * alter, remove and add new commands to response.
  */
 function hook_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &$ajax_response, $form, Drupal\Core\Form\FormStateInterface $form_state) {
-  if ($form_state->isSubmitted()) {
+  if ($form_state->isExecuted()) {
     $ajax_response->addCommand(new ReplaceCommand('#contact-form-' . $form['#build_id'], t('Thank you for your submission!')));
   }
 }
@@ -47,7 +48,7 @@ function hook_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &
  * words, this is bundle name of the contact_message entity.
  */
 function hook_contact_tools_CONTACT_NAME_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &$ajax_response, $form, Drupal\Core\Form\FormStateInterface $form_state) {
-  if ($form_state->isSubmitted()) {
+  if ($form_state->isExecuted()) {
     $base_url = \Drupal::request()->getSchemeAndHttpHost();
     $ajax_response->addCommand(new RedirectCommand($base_url . '/submission-complete'));
   }

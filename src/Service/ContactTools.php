@@ -31,7 +31,12 @@ class ContactTools {
    */
   public function createModalLink($link_title, $contact_form, array $link_options = []) {
     $link_options_merged = $this->mergeLinkOptions($this->getLinkOptionsDefault(), $link_options);
-    $this->modalLinkOptionsAlter($link_options_merged);
+    $context = [
+      'contact_form' => $contact_form,
+      'link_title' => $link_title,
+      'type' => 'modal_link',
+    ];
+    $this->modalLinkOptionsAlter($link_options_merged, $context);
     // Modal settings must be in json format.
     $link_options_merged['attributes']['data-dialog-options'] = Json::encode($link_options_merged['attributes']['data-dialog-options']);
 
@@ -63,7 +68,12 @@ class ContactTools {
    */
   public function createModalLinkAjax($link_title, $contact_form, array $link_options = []) {
     $link_options_merged = $this->mergeLinkOptions($this->getLinkOptionsDefault(), $link_options);
-    $this->modalLinkOptionsAlter($link_options_merged);
+    $context = [
+      'contact_form' => $contact_form,
+      'link_title' => $link_title,
+      'type' => 'modal_link_ajax',
+    ];
+    $this->modalLinkOptionsAlter($link_options_merged, $context);
     // Modal settings must be in json format.
     $link_options_merged['attributes']['data-dialog-options'] = Json::encode($link_options_merged['attributes']['data-dialog-options']);
 
@@ -130,9 +140,9 @@ class ContactTools {
    * hooks by the key. Can be used to set default settings for needed set of
    * forms.
    */
-  protected function modalLinkOptionsAlter(array &$link_options) {
+  protected function modalLinkOptionsAlter(array &$link_options, array $context) {
     \Drupal::moduleHandler()
-      ->alter('contact_tools_modal_link_options', $link_options['attributes']['data-dialog-options']);
+      ->alter('contact_tools_modal_link_options', $link_options['attributes']['data-dialog-options'], $context);
   }
 
   /**
