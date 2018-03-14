@@ -11,8 +11,8 @@ There are several hooks that can be handful in some cases.
  * Allows you to alter link and url options for modal links.
  */
 function hook_contact_tools_modal_link_options_alter(array &$link_options, $key) {
-  $link_options['attributes']['data-dialog-options']['width'] = 600;
-  $link_options['attributes']['data-dialog-options']['dialogClass'] = 'my-special-form';
+  $link_options['width'] = 600;
+  $link_options['dialogClass'] = 'my-special-form';
 }
 ```
 
