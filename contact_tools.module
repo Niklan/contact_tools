@@ -49,7 +49,7 @@ function contact_tools_ajax_submit_handler(array &$form, FormStateInterface $for
   $contact_form_bundle = $form_state->getFormObject()->getEntity()->bundle();
   $messages = [
     '#theme' => 'status_messages',
-    '#message_list' => drupal_get_messages(),
+    '#message_list' => \Drupal::messenger()->all(),
     '#status_headings' => [
       'status' => t('Status message'),
       'error' => t('Error message'),
