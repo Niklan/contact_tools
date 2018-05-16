@@ -73,3 +73,14 @@ function contact_tools_ajax_submit_handler(array &$form, FormStateInterface $for
     ->alter($hook_alters, $ajax_response, $form, $form_state);
   return $ajax_response;
 }
+
+/**
+ * Implements hook_robotstxt().
+ *
+ * Exclude AJAX routes for search spiders.
+ */
+function contact_tools_robotstxt() {
+  return [
+    'Disallow: /contact-tools',
+  ];
+}
