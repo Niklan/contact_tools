@@ -140,7 +140,7 @@ class ContactTools {
    * hooks by the key. Can be used to set default settings for needed set of
    * forms.
    */
-  protected function modalLinkOptionsAlter(array &$link_options, array $context) {
+  protected function modalLinkOptionsAlter(array &$link_options, array $context = []) {
     \Drupal::moduleHandler()
       ->alter('contact_tools_modal_link_options', $link_options['attributes']['data-dialog-options'], $context);
   }
