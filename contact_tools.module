@@ -17,7 +17,10 @@ function contact_tools_form_contact_message_form_alter(&$form, FormStateInterfac
   $storage = $form_state->getStorage();
 
   if (isset($storage['contact_tools']) && $storage['contact_tools']['is_ajax']) {
-    $classes_array = $form['#attributes']['class'];
+    $classes_array = [];
+    foreach ($form['#attributes']['class'] as $default_class) {
+      $classes_array[] = "{$default_class}-ajax-wrapper";
+    }
     $classes_array[] = 'contact-tools-wrapper';
     $classes = implode(' ', $classes_array);
     $form['#prefix'] = '<div id="contact-form-' . $form['#build_id'] . '" class="' . $classes . '">';
