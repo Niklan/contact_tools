@@ -4,15 +4,16 @@ namespace Drupal\contact_tools\Plugin\Filter;
 
 use DOMDocument;
 use Drupal\Component\Serialization\Json;
-use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\Plugin\FilterBase;
 
 /**
  * @Filter(
  *   id = "contact_tools_modal_link",
  *   title = @Translation("Contact Tools modal links"),
- *   description = @Translation("Attach Modal API to links with href='/contact-tools/CONTACT_FORM'."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
+ *   description = @Translation("Attach Modal API to links with
+ *   href='/contact-tools/CONTACT_FORM'."), type =
+ *   Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
  * )
  */
 class ModalLinkFilter extends FilterBase {
@@ -59,8 +60,13 @@ class ModalLinkFilter extends FilterBase {
             'dialogClass' => 'contact-tools-modal',
           ];
         }
+
+        $context = [
+          'type' => 'filter_link',
+        ];
+
         \Drupal::moduleHandler()
-          ->alter('contact_tools_modal_link_options', $dialog_options);
+          ->alter('contact_tools_modal_link_options', $dialog_options, $context);
         $link->setAttribute('data-dialog-options', Json::encode($dialog_options));
       }
     }
