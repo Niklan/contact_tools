@@ -2,7 +2,6 @@
 
 namespace Drupal\contact_tools\Controller;
 
-use Drupal\Component\Utility\Html;
 use Drupal\contact\ContactFormInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
@@ -47,9 +46,10 @@ class ContactToolsPageController extends ControllerBase {
       // If there are no forms, do not display the form.
       if (empty($contact_form)) {
         if ($this->currentUser()->hasPermission('administer contact forms')) {
-          drupal_set_message($this->t('The contact form has not been configured. <a href=":add">Add one or more forms</a> .', [
-            ':add' => $this->url('contact.form_add'),
-          ]), 'error');
+          \Drupal::messenger()
+            ->addError($this->t('The contact form has not been configured. <a href=":add">Add one or more forms</a> .', [
+              ':add' => $this->url('contact.form_add'),
+            ]));
           return [];
         }
         else {
