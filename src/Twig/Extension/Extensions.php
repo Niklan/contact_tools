@@ -50,15 +50,15 @@ class Extensions extends \Twig_Extension {
   /**
    * Return form render array with AJAX support.
    */
-  public function contactFormAjax($contact_form_id = 'default_form') {
-    return $this->contactTools->getFormAjax($contact_form_id);
+  public function contactFormAjax($contact_form_id = 'default_form', array $form_state_additions = []) {
+    return $this->contactTools->getFormAjax($contact_form_id, $form_state_additions);
   }
 
   /**
    * Return form render array with AJAX support.
    */
-  public function contactForm($contact_form_id = 'default_form') {
-    return $this->contactTools->getForm($contact_form_id);
+  public function contactForm($contact_form_id = 'default_form', array $form_state_additions = []) {
+    return $this->contactTools->getForm($contact_form_id, $form_state_additions);
   }
 
   /**

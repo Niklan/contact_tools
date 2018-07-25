@@ -3,6 +3,7 @@
 namespace Drupal\contact_tools\Service;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityFormBuilderInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -122,16 +123,20 @@ class ContactTools {
    *
    * @param string $contact_form_id
    *   Machine name of contact form to be loaded.
+   * @param array $form_state_additions
+   *   (optional) An associative array used to build the current state of the
+   *   form. Use this to pass additional information to the form, such as the
+   *   langcode. Defaults to an empty array.
    *
    * @return array
    *   Render array with form.
    */
-  public function getForm($contact_form_id = 'default_form') {
+  public function getForm($contact_form_id = 'default_form', array $form_state_additions = []) {
     $contact_message = $this->contactStorage->create([
       'contact_form' => $contact_form_id,
     ]);
 
-    $form = $this->entityFormBuilder->getForm($contact_message, 'default', []);
+    $form = $this->entityFormBuilder->getForm($contact_message, 'default', $form_state_additions);
     $form['#title'] = $contact_message->label();
     $form['#cache']['contexts'][] = 'user.permissions';
     return $form;
@@ -142,22 +147,32 @@ class ContactTools {
    *
    * @param string $contact_form_id
    *   Machine name of contact form to be loaded.
+   * @param array $form_state_additions
+   *   (optional) An associative array used to build the current state of the
+   *   form. Use this to pass additional information to the form, such as the
+   *   langcode. Defaults to an empty array.
    *
    * @return array
    *   Render array with form.
    */
-  public function getFormAjax($contact_form_id = 'default_form') {
+  public function getFormAjax($contact_form_id = 'default_form', array $form_state_additions = []) {
     $contact_message = $this->contactStorage->create([
       'contact_form' => $contact_form_id,
     ]);
     // Ajax is added by hook_form_alter(). Because here we can't change any of
     // actions of the form.
-    $form_state_additional = [
+    $form_state_additional_default = [
       'contact_tools' => [
         'is_ajax' => TRUE,
       ],
     ];
-    $form = $this->entityFormBuilder->getForm($contact_message, 'default', $form_state_additional);
+
+    $form_state_additions = NestedArray::mergeDeepArray([
+      $form_state_additions,
+      $form_state_additional_default,
+    ]);
+
+    $form = $this->entityFormBuilder->getForm($contact_message, 'default', $form_state_additions);
     $form['#title'] = $contact_message->label();
     $form['#cache']['contexts'][] = 'user.permissions';
     return $form;

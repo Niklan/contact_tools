@@ -18,6 +18,7 @@ Those two method generate `$form` render array with specified contact form and r
 #### Parameters
 
 - `$contact_form_id = 'default_form'`: (optional) contact form bundle name which you want to load. If not passes, will be loaded default contact form which can be selected via contact admin settings.
+- `$form_state_additions = []`: (optional) An associative array with values which will be passed to `$form_state` of form. You can acces them in `hook_form_alter()` lately via `$form_state->getStorage()`.
 
 #### Example
 
@@ -29,6 +30,9 @@ $default_form = $contact_tools->getForm();
 
 // Load feedback form with AJAX submit handler.
 $feedback_ajax = $contact_tools->getFormAjax('feedback');
+
+// Pass additional information to form. This value can be accesed during alter.
+$default_form = $contact_tools->getForm('callback', ['page' => 'My page']);
 ```
 
 <a href="createModalLink"></a>

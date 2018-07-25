@@ -69,3 +69,28 @@ For example, you want to do something like [this](https://codepen.io/seansean11/
 4. Clear the cache and see the result!
 
 [![Result](https://media.giphy.com/media/7IW6vwFrzxvR2A2YmB/giphy.gif)](https://giphy.com/gifs/7IW6vwFrzxvR2A2YmB/html5)
+
+## Pass some data to the form.
+
+1. E.g. call form from node template.
+
+```twig
+{{ contact_form_ajax('order', { product: node.label() }) }}
+```
+
+2. Alter that form and set this value to field and hide it from user.
+
+```php
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function MYMODULE_form_contact_message_order_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $storage = $form_state->getStorage();
+  $hidden_text = '';
+  if (!empty($storage['product'])) {
+    $hidden_text .= 'Product: ' . $product_name . PHP_EOL;
+    $form['field_hidden_body']['widget'][0]['value']['#default_value'] = $hidden_text;
+  }
+  hide($form['field_hidden_body']);
+}
+```

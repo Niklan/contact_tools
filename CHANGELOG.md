@@ -3,6 +3,7 @@
 ## Changes in dev
 
 - Improved code quality.
+- Added ability to pass data to form for `getForm()`, `getFormAjax()` and their Twig functions. Also added example how to use it.
 
 ## 8.x-1.0-rc1
 

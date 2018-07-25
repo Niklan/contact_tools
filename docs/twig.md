@@ -11,6 +11,10 @@ Twig is awsome and used alot in Drupal theming. Module is providing Twig functio
 {# Contact form with AJAX. #}
 {{ contact_form_ajax('feedback') }}
 
+{# Contact form with data. #}
+{{ contact_form('order', { product: node.label() });
+{{ contact_form_ajax('order', { product: node.label() });
+
 {# Modal link with AJAX form. #}
 {{ contact_modal_ajax('Write to us!', 'feedback') }}
 
