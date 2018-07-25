@@ -2,15 +2,32 @@
 
 namespace Drupal\contact_tools\Twig\Extension;
 
+use Drupal\contact_tools\Service\ContactTools;
+
 /**
  * Custom twig function for contact tools.
  */
 class Extensions extends \Twig_Extension {
 
   /**
+   * Contact tools service.
+   *
+   * @var \Drupal\contact_tools\Service\ContactTools
+   */
+  protected $contactTools;
+
+  /**
+   * Extensions constructor.
+   */
+  public function __construct(ContactTools $contact_tools) {
+    $this->contactTools = $contact_tools;
+  }
+
+  /**
    * Returns the name of the extension.
    *
-   * @return string The extension name
+   * @return string
+   *   Extension name.
    */
   public function getName() {
     return 'contact_tools';
@@ -34,32 +51,28 @@ class Extensions extends \Twig_Extension {
    * Return form render array with AJAX support.
    */
   public function contactFormAjax($contact_form_id = 'default_form') {
-    $contact_tools = \Drupal::service('contact_tools');
-    return $contact_tools->getFormAjax($contact_form_id);
+    return $this->contactTools->getFormAjax($contact_form_id);
   }
 
   /**
    * Return form render array with AJAX support.
    */
   public function contactForm($contact_form_id = 'default_form') {
-    $contact_tools = \Drupal::service('contact_tools');
-    return $contact_tools->getForm($contact_form_id);
+    return $this->contactTools->getForm($contact_form_id);
   }
 
   /**
    * Return form render array with AJAX support.
    */
   public function contactModal($link_title, $contact_form, $link_options = [], $key = 'default') {
-    $contact_tools = \Drupal::service('contact_tools');
-    return $contact_tools->createModalLink($link_title, $contact_form, $link_options, $key);
+    return $this->contactTools->createModalLink($link_title, $contact_form, $link_options, $key);
   }
 
   /**
    * Return form render array with AJAX support.
    */
   public function contactModalAjax($link_title, $contact_form, $link_options = [], $key = 'default-ajax') {
-    $contact_tools = \Drupal::service('contact_tools');
-    return $contact_tools->createModalLinkAjax($link_title, $contact_form, $link_options, $key);
+    return $this->contactTools->createModalLinkAjax($link_title, $contact_form, $link_options, $key);
   }
 
 }

@@ -4,19 +4,60 @@ namespace Drupal\contact_tools\Plugin\Filter;
 
 use DOMDocument;
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
+ * Contact tools filter.
+ *
  * @Filter(
  *   id = "contact_tools_modal_link",
  *   title = @Translation("Contact Tools modal links"),
- *   description = @Translation("Attach Modal API to links with
- *   href='/contact-tools/CONTACT_FORM'."), type =
- *   Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
+ *   description = @Translation("Attach Modal API to links with href='/contact-tools/CONTACT_FORM'."),
+ *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
  * )
  */
-class ModalLinkFilter extends FilterBase {
+class ModalLinkFilter extends FilterBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * Renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * Module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * ModalLinkFilter constructor.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $renderer, ModuleHandlerInterface $moduleHandler) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->renderer = $renderer;
+    $this->moduleHandler = $moduleHandler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('renderer'),
+      $container->get('module_handler')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -33,16 +74,19 @@ class ModalLinkFilter extends FilterBase {
       if (preg_match('/\/contact-tools\//s', $href)) {
         // Attach library.
         $attached = ['#attached' => ['library' => ['core/drupal.dialog.ajax']]];
-        \Drupal::service('renderer')->render($attached);
+        $this->renderer->render($attached);
+
         $classes = $link->getAttribute('class');
         if (!preg_match('/use-ajax/', $classes)) {
           $classes .= ' use-ajax';
           $link->setAttribute('class', $classes);
         }
+
         // Check if set dialog type. If not, set to modal as default.
         if (!$link->getAttribute('data-dialog-type')) {
           $link->setAttribute('data-dialog-type', 'modal');
         }
+
         // Manage data-dialog-options.
         $data_dialog_options = $link->getAttribute('data-dialog-options');
         if ($data_dialog_options) {
@@ -65,8 +109,7 @@ class ModalLinkFilter extends FilterBase {
           'type' => 'filter_link',
         ];
 
-        \Drupal::moduleHandler()
-          ->alter('contact_tools_modal_link_options', $dialog_options, $context);
+        $this->moduleHandler->alter('contact_tools_modal_link_options', $dialog_options, $context);
         $link->setAttribute('data-dialog-options', Json::encode($dialog_options));
       }
     }

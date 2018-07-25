@@ -3,12 +3,45 @@
 namespace Drupal\contact_tools\Service;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\EntityFormBuilderInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Url;
 
 /**
  * Main class for all snippets and helpers.
  */
 class ContactTools {
+
+  /**
+   * Contact message storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $contactStorage;
+
+  /**
+   * Entity form builder.
+   *
+   * @var \Drupal\Core\Entity\EntityFormBuilderInterface
+   */
+  protected $entityFormBuilder;
+
+  /**
+   * Module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * ContactTools constructor.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFormBuilderInterface $entity_form_builder, ModuleHandlerInterface $module_handler) {
+    $this->contactStorage = $entity_type_manager->getStorage('contact_message');
+    $this->entityFormBuilder = $entity_form_builder;
+    $this->moduleHandler = $module_handler;
+  }
 
   /**
    * Return modal link which load form in modal.
@@ -23,8 +56,6 @@ class ContactTools {
    *   form supports for modal API via data-dialog-options attribute. You can
    *   pass personal settings according to jQuery Dialog Widget. See
    *   http://api.jqueryui.com/dialog/ for details.
-   * @param string $key
-   *   This key will be used for hook_contact_tools_modal_link_options_alter().
    *
    * @return array
    *   Renderable array with link.
@@ -91,16 +122,16 @@ class ContactTools {
    *
    * @param string $contact_form_id
    *   Machine name of contact form to be loaded.
+   *
+   * @return array
+   *   Render array with form.
    */
   public function getForm($contact_form_id = 'default_form') {
-    $contact_message = \Drupal::entityTypeManager()
-      ->getStorage('contact_message')
-      ->create([
-        'contact_form' => $contact_form_id,
-      ]);
+    $contact_message = $this->contactStorage->create([
+      'contact_form' => $contact_form_id,
+    ]);
 
-    $form = \Drupal::service('entity.form_builder')
-      ->getForm($contact_message, 'default', []);
+    $form = $this->entityFormBuilder->getForm($contact_message, 'default', []);
     $form['#title'] = $contact_message->label();
     $form['#cache']['contexts'][] = 'user.permissions';
     return $form;
@@ -111,13 +142,14 @@ class ContactTools {
    *
    * @param string $contact_form_id
    *   Machine name of contact form to be loaded.
+   *
+   * @return array
+   *   Render array with form.
    */
   public function getFormAjax($contact_form_id = 'default_form') {
-    $contact_message = \Drupal::entityTypeManager()
-      ->getStorage('contact_message')
-      ->create([
-        'contact_form' => $contact_form_id,
-      ]);
+    $contact_message = $this->contactStorage->create([
+      'contact_form' => $contact_form_id,
+    ]);
     // Ajax is added by hook_form_alter(). Because here we can't change any of
     // actions of the form.
     $form_state_additional = [
@@ -125,8 +157,7 @@ class ContactTools {
         'is_ajax' => TRUE,
       ],
     ];
-    $form = \Drupal::service('entity.form_builder')
-      ->getForm($contact_message, 'default', $form_state_additional);
+    $form = $this->entityFormBuilder->getForm($contact_message, 'default', $form_state_additional);
     $form['#title'] = $contact_message->label();
     $form['#cache']['contexts'][] = 'user.permissions';
     return $form;
@@ -141,8 +172,11 @@ class ContactTools {
    * forms.
    */
   protected function modalLinkOptionsAlter(array &$link_options, array $context = []) {
-    \Drupal::moduleHandler()
-      ->alter('contact_tools_modal_link_options', $link_options['attributes']['data-dialog-options'], $context);
+    $this->moduleHandler->alter(
+      'contact_tools_modal_link_options',
+      $link_options['attributes']['data-dialog-options'],
+      $context
+    );
   }
 
   /**
