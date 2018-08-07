@@ -34,12 +34,12 @@ function hook_contact_tools_modal_link_options_alter(array &$link_options, array
  *
  * @param \Drupal\core\Ajax\AjaxResponse $ajax_response
  *   Ajax Response object.
- * @param $form
+ * @param array $form
  *   Form's render array.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   Form state.
  */
-function hook_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &$ajax_response, $form, Drupal\Core\Form\FormStateInterface $form_state) {
+function hook_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &$ajax_response, array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
   if ($form_state->isExecuted()) {
     $ajax_response->addCommand(new ReplaceCommand('#contact-form-' . $form['#build_id'], t('Thank you for your submission!')));
   }
@@ -57,12 +57,12 @@ function hook_contact_tools_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &
  *
  * @param \Drupal\core\Ajax\AjaxResponse $ajax_response
  *   Ajax Response object.
- * @param $form
+ * @param array $form
  *   Form's render array.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   Form state.
  */
-function hook_contact_tools_CONTACT_NAME_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &$ajax_response, $form, Drupal\Core\Form\FormStateInterface $form_state) {
+function hook_contact_tools_CONTACT_NAME_ajax_response_alter(\Drupal\core\Ajax\AjaxResponse &$ajax_response, array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
   if ($form_state->isExecuted()) {
     $base_url = \Drupal::request()->getSchemeAndHttpHost();
     $ajax_response->addCommand(new RedirectCommand($base_url . '/submission-complete'));

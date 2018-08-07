@@ -3,4 +3,4 @@ description: 'Helpers for Contact module provides some extra blueprints for AJAX
 core: '8.x'
 type: module
 dependencies:
-  - contact
+  - drupal:contact
