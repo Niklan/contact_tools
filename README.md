@@ -17,11 +17,11 @@ Contact module forms.
 Features:
 
  * AJAX support for contact forms on demand.
- * Service to easily call the contact form w/ and w/o AJAX support, generate the
+ * [Service][Service documentation] to easily call the contact form w/ and w/o AJAX support, generate the
    link, which opens form in modal window w/ and w/o AJAX.
- * Text filter which allows to create simple links with modal form support.
- * Twig functions to easy embed modal links or whole form in the template.
- * Hooks to modify data on every step.
+ * [Text filter] which allows to create simple links with modal form support.
+ * [Twig functions] to easy embed modal links or whole form in the template.
+ * [Hooks] to modify data on every step.
 
  * For a full description of the module, visit the project page:
    https://www.drupal.org/project/contact_tools
@@ -61,3 +61,8 @@ MAINTAINERS
 -----------
 
  * Nikita Malyshev (Niklan) - https://www.drupal.org/u/niklan
+
+[Service documentation]: https://contact-tools.readthedocs.io/en/8.x-1.x/service/
+[Text filter]: https://contact-tools.readthedocs.io/en/8.x-1.x/filter/
+[Twig functions]: https://contact-tools.readthedocs.io/en/8.x-1.x/twig/
+[Hooks]: https://contact-tools.readthedocs.io/en/8.x-1.x/hooks/
