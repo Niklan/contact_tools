@@ -15,6 +15,7 @@ The Contact Tools module is a pack of tools for working with Drupal 8 core
 Contact module forms.
 
 Features:
+
  * AJAX support for contact forms on demand.
  * Service to easily call the contact form w/ and w/o AJAX support, generate the
    link, which opens form in modal window w/ and w/o AJAX.

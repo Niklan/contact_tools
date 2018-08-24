@@ -2,6 +2,11 @@
 
 ## Changes in dev
 
+- Improved readme [#2994630](https://www.drupal.org/project/contact_tools/issues/2994630)*
+- Improved code quality according to Drupal Coding Standards.
+- Added help page based on README.md file.
+
+
 ## 8.x-1.0-rc3
 
 **Warning!** This release can break your form theming and AJAX will work incorrectly for multiple instance of the same form on the same page, including called via modal because of new static selector.
