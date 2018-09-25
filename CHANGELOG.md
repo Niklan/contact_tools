@@ -2,9 +2,12 @@
 
 ## Changes in dev
 
+## 8.x-1.0-rc4
+
 - Improved readme [#2994630](https://www.drupal.org/project/contact_tools/issues/2994630)*
 - Improved code quality according to Drupal Coding Standards.
 - Added help page based on README.md file.
+- System messages moved from form alter to AJAX. Because they also shows other messages if set to form by default.
 
 
 ## 8.x-1.0-rc3
