@@ -6,6 +6,7 @@ use Drupal\contact\ContactFormInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -13,14 +14,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Controller routines for contact routes.
  */
-class ContactToolsPageController extends ControllerBase {
+final class ContactToolsPageController extends ControllerBase {
 
   /**
-   * Current request.
+   * The request stack.
    *
-   * @var null|\Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * Contact message storage.
@@ -39,21 +40,12 @@ class ContactToolsPageController extends ControllerBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager) {
-    $this->request = $request_stack->getCurrentRequest();
-    $this->contactStorage = $entity_type_manager->getStorage('contact_message');
-    $this->contactFormStorage = $entity_type_manager->getStorage('contact_form');
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('request_stack'),
-      $container->get('entity_type.manager')
-    );
+    $instance = new static();
+    $instance->requestStack = $container->get('request_stack');
+    $instance->contactStorage = $container->get('entity_type.manager')->getStorage('contact_message');
+    $instance->contactFormStorage = $container->get('entity_type.manager')->getStorage('contact_form');
+    return $instance;
   }
 
   /**
@@ -61,7 +53,7 @@ class ContactToolsPageController extends ControllerBase {
    */
   public function contactPageAjax(ContactFormInterface $contact_form = NULL) {
     $config = $this->config('contact.settings');
-    $query = $this->request->query;
+    $query = $this->requestStack->getCurrentRequest()->query;
 
     // Use the default form if no form has been passed.
     if (empty($contact_form)) {
@@ -71,7 +63,7 @@ class ContactToolsPageController extends ControllerBase {
         if ($this->currentUser()->hasPermission('administer contact forms')) {
           $message = $this->t('The contact form has not been configured. <a href=":add">Add one or more forms</a> .',
             [
-              ':add' => $this->url('contact.form_add'),
+              ':add' => Url::fromRoute('contact.form_add')->toString(),
             ]);
           $this->messenger()->addError($message);
           return [];

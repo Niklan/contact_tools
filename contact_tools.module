@@ -58,7 +58,9 @@ function contact_tools_form_contact_message_form_alter(&$form, FormStateInterfac
  */
 function contact_tools_ajax_submit_handler(array &$form, FormStateInterface $form_state, Request $request) {
   $form_state->setRebuild();
-  $contact_form_bundle = $form_state->getFormObject()->getEntity()->bundle();
+  /** @var \Drupal\Core\Entity\EntityFormInterface $entity_form */
+  $entity_form = $form_state->getFormObject();
+  $contact_form_bundle = $entity_form->getEntity()->bundle();
 
   // System with errors, alerts and status messages.
   $form['system_messages'] = [
