@@ -3,6 +3,8 @@
 ## Changes in dev
 
 - Fix PHPCS and PHPStan issues.
+- [#3270738](https://www.drupal.org/project/contact_tools/issues/3270738) PHP
+  8.1 deprecated message
 
 ## 8.x-1.0-rc4
 

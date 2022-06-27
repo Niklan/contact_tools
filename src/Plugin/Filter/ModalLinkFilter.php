@@ -3,6 +3,7 @@
 namespace Drupal\contact_tools\Plugin\Filter;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
@@ -22,25 +23,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class ModalLinkFilter extends FilterBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected $moduleHandler;
+  protected ModuleHandlerInterface $moduleHandler;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
     $instance = new self($configuration, $plugin_id, $plugin_definition);
-    $instance->renderer = $container->get('renderer');
     $instance->moduleHandler = $container->get('module_handler');
 
     return $instance;
@@ -51,7 +44,7 @@ final class ModalLinkFilter extends FilterBase implements ContainerFactoryPlugin
    */
   public function process($text, $langcode): FilterProcessResult {
     $result = new FilterProcessResult($text);
-    $dom = new \DOMDocument(NULL, 'UTF-8');
+    $dom = new \DOMDocument();
     $dom->encoding = 'UTF-8';
     @$dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'));
     $links = $dom->getElementsByTagName('a');
@@ -59,9 +52,7 @@ final class ModalLinkFilter extends FilterBase implements ContainerFactoryPlugin
     foreach ($links as $link) {
       $href = $link->getAttribute('href');
       if (preg_match('/\/contact-tools\//s', $href)) {
-        // Attach library.
-        $attached = ['#attached' => ['library' => ['core/drupal.dialog.ajax']]];
-        $this->renderer->render($attached);
+        $result->addAttachments(['library' => ['core/drupal.dialog.ajax']]);
 
         $classes = $link->getAttribute('class');
         if (!preg_match('/use-ajax/', $classes)) {
