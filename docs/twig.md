@@ -1,6 +1,7 @@
 # Twig
 
-Twig is awsome and used alot in Drupal theming. Module is providing Twig functions for contact forms aswell!
+Twig is awsome and used alot in Drupal theming. Module is providing Twig
+functions for contact forms aswell!
 
 ### Examples
 

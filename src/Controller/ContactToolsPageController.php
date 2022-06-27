@@ -3,12 +3,13 @@
 namespace Drupal\contact_tools\Controller;
 
 use Drupal\contact\ContactFormInterface;
+use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
+use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -19,39 +20,28 @@ final class ContactToolsPageController extends ControllerBase {
   /**
    * The request stack.
    *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
+   * @var \Drupal\Core\Http\RequestStack
    */
-  protected $requestStack;
+  protected RequestStack $requestStack;
 
   /**
    * Contact message storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\ContentEntityStorageInterface
    */
-  protected $contactStorage;
+  protected ContentEntityStorageInterface $contactStorage;
 
   /**
    * Contact form storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
    */
-  protected $contactFormStorage;
+  protected ConfigEntityStorageInterface $contactFormStorage;
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    $instance = new static();
-    $instance->requestStack = $container->get('request_stack');
-    $instance->contactStorage = $container->get('entity_type.manager')->getStorage('contact_message');
-    $instance->contactFormStorage = $container->get('entity_type.manager')->getStorage('contact_form');
-    return $instance;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function contactPageAjax(ContactFormInterface $contact_form = NULL) {
+  public function contactPageAjax(ContactFormInterface $contact_form = NULL): array {
     $config = $this->config('contact.settings');
     $query = $this->requestStack->getCurrentRequest()->query;
 
@@ -66,6 +56,7 @@ final class ContactToolsPageController extends ControllerBase {
               ':add' => Url::fromRoute('contact.form_add')->toString(),
             ]);
           $this->messenger()->addError($message);
+
           return [];
         }
         else {
@@ -101,6 +92,20 @@ final class ContactToolsPageController extends ControllerBase {
     $cache->applyTo($form);
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container): self {
+    $entity_type_manager = $container->get('entity_type.manager');
+
+    $instance = new self();
+    $instance->requestStack = $container->get('request_stack');
+    $instance->contactStorage = $entity_type_manager->getStorage('contact_message');
+    $instance->contactFormStorage = $entity_type_manager->getStorage('contact_form');
+
+    return $instance;
   }
 
 }

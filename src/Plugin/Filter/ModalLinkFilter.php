@@ -2,11 +2,8 @@
 
 namespace Drupal\contact_tools\Plugin\Filter;
 
-use DOMDocument;
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,11 +14,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Filter(
  *   id = "contact_tools_modal_link",
  *   title = @Translation("Contact Tools modal links"),
- *   description = @Translation("Attach Modal API to links with href='/contact-tools/CONTACT_FORM'."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
+ *   description = @Translation("Attach Modal API to links with
+ *   href='/contact-tools/CONTACT_FORM'."), type =
+ *   Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
  * )
  */
-class ModalLinkFilter extends FilterBase implements ContainerFactoryPluginInterface {
+final class ModalLinkFilter extends FilterBase implements ContainerFactoryPluginInterface {
 
   /**
    * Renderer.
@@ -38,33 +36,22 @@ class ModalLinkFilter extends FilterBase implements ContainerFactoryPluginInterf
   protected $moduleHandler;
 
   /**
-   * ModalLinkFilter constructor.
+   * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $renderer, ModuleHandlerInterface $moduleHandler) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->renderer = $renderer;
-    $this->moduleHandler = $moduleHandler;
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
+    $instance = new self($configuration, $plugin_id, $plugin_definition);
+    $instance->renderer = $container->get('renderer');
+    $instance->moduleHandler = $container->get('module_handler');
+
+    return $instance;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('renderer'),
-      $container->get('module_handler')
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function process($text, $langcode) {
+  public function process($text, $langcode): FilterProcessResult {
     $result = new FilterProcessResult($text);
-    $dom = new DOMDocument(NULL, 'UTF-8');
+    $dom = new \DOMDocument(NULL, 'UTF-8');
     $dom->encoding = 'UTF-8';
     @$dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'));
     $links = $dom->getElementsByTagName('a');
@@ -117,14 +104,15 @@ class ModalLinkFilter extends FilterBase implements ContainerFactoryPluginInterf
     // invalidate the whole page.
     $text = preg_replace('~<(?:!DOCTYPE|/?(?:html|body))[^>]*>\s*~i', '', $dom->saveHTML());
     $result->setProcessedText($text);
+
     return $result;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function tips($long = FALSE) {
-    return $this->t('Attach Modal API to links with href="/contact-tools/CONTACT_FORM".');
+  public function tips($long = FALSE): ?string {
+    return (string) $this->t('Attach Modal API to links with href="/contact-tools/CONTACT_FORM".');
   }
 
 }

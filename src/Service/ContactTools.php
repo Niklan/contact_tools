@@ -4,6 +4,7 @@ namespace Drupal\contact_tools\Service;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\EntityFormBuilderInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -12,31 +13,38 @@ use Drupal\Core\Url;
 /**
  * Main class for all snippets and helpers.
  */
-class ContactTools {
+final class ContactTools {
 
   /**
-   * Contact message storage.
+   * The contact message storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\ContentEntityStorageInterface
    */
-  protected $contactStorage;
+  protected ContentEntityStorageInterface $contactStorage;
 
   /**
-   * Entity form builder.
+   * The entity form builder.
    *
    * @var \Drupal\Core\Entity\EntityFormBuilderInterface
    */
-  protected $entityFormBuilder;
+  protected EntityFormBuilderInterface $entityFormBuilder;
 
   /**
-   * Module handler.
+   * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected $moduleHandler;
+  protected ModuleHandlerInterface $moduleHandler;
 
   /**
-   * ContactTools constructor.
+   * Constructs a new ContactTools object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder
+   *   The entity form builder.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFormBuilderInterface $entity_form_builder, ModuleHandlerInterface $module_handler) {
     $this->contactStorage = $entity_type_manager->getStorage('contact_message');
@@ -61,7 +69,7 @@ class ContactTools {
    * @return array
    *   Renderable array with link.
    */
-  public function createModalLink($link_title, $contact_form, array $link_options = []) {
+  public function createModalLink(string $link_title, string $contact_form, array $link_options = []): array {
     $link_options_merged = $this->mergeLinkOptions($this->getLinkOptionsDefault(), $link_options);
     $context = [
       'contact_form' => $contact_form,
@@ -98,7 +106,7 @@ class ContactTools {
    * @return array
    *   Renderable array with link.
    */
-  public function createModalLinkAjax($link_title, $contact_form, array $link_options = []) {
+  public function createModalLinkAjax(string $link_title, string $contact_form, array $link_options = []): array {
     $link_options_merged = $this->mergeLinkOptions($this->getLinkOptionsDefault(), $link_options);
     $context = [
       'contact_form' => $contact_form,
@@ -131,7 +139,7 @@ class ContactTools {
    * @return array
    *   Render array with form.
    */
-  public function getForm($contact_form_id = 'default_form', array $form_state_additions = []) {
+  public function getForm(string $contact_form_id = 'default_form', array $form_state_additions = []): array {
     $contact_message = $this->contactStorage->create([
       'contact_form' => $contact_form_id,
     ]);
@@ -155,7 +163,7 @@ class ContactTools {
    * @return array
    *   Render array with form.
    */
-  public function getFormAjax($contact_form_id = 'default_form', array $form_state_additions = []) {
+  public function getFormAjax(string $contact_form_id = 'default_form', array $form_state_additions = []): array {
     $contact_message = $this->contactStorage->create([
       'contact_form' => $contact_form_id,
     ]);
@@ -186,7 +194,7 @@ class ContactTools {
    * hooks by the key. Can be used to set default settings for needed set of
    * forms.
    */
-  protected function modalLinkOptionsAlter(array &$link_options, array $context = []) {
+  protected function modalLinkOptionsAlter(array &$link_options, array $context = []): void {
     $this->moduleHandler->alter(
       'contact_tools_modal_link_options',
       $link_options['attributes']['data-dialog-options'],
@@ -196,8 +204,11 @@ class ContactTools {
 
   /**
    * Return default options for link.
+   *
+   * @return array
+   *   An array with default options.
    */
-  protected function getLinkOptionsDefault() {
+  protected function getLinkOptionsDefault(): array {
     return [
       'attributes' => [
         'class' => ['use-ajax'],
@@ -212,9 +223,17 @@ class ContactTools {
   }
 
   /**
-   * Merge two arrays recursively, but replace existed values, not extend them.
+   * Merges two arrays recursively, but replace existed values, not extend them.
+   *
+   * @param array $array1
+   *   The first array to merge into.
+   * @param array $array2
+   *   The second array to merge.
+   *
+   * @return array
+   *   A result array.
    */
-  protected function arrayMergeRecursiveDistinct(array &$array1, array &$array2) {
+  protected function arrayMergeRecursiveDistinct(array &$array1, array &$array2): array {
     $merged = $array1;
 
     foreach ($array2 as $key => &$value) {
@@ -230,9 +249,17 @@ class ContactTools {
   }
 
   /**
-   * Fix some sensitive values that can be overriden by distinct merge.
+   * Fix some sensitive values that can be overridden by distinct merge.
+   *
+   * @param array $array1
+   *   The first array to merge into.
+   * @param array $array2
+   *   The second array to merge.
+   *
+   * @return array
+   *   A result array
    */
-  protected function mergeLinkOptions(array $array1, array $array2) {
+  protected function mergeLinkOptions(array $array1, array $array2): array {
     $merged = $this->arrayMergeRecursiveDistinct($array1, $array2);
 
     if (!empty($merged['attributes']['class']) && !in_array('use-ajax', $merged['attributes']['class'])) {

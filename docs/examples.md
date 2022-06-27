@@ -2,11 +2,15 @@
 
 ## Animated SVG after AJAX successful submission
 
-For example, you want to do something like [this](https://codepen.io/seansean11/pen/fBjIi) after form successfully submitted. That's easy!
+For example, you want to do something
+like [this](https://codepen.io/seansean11/pen/fBjIi) after form successfully
+submitted. That's easy!
 
-1. Save this svg as a file, for easier access and distribution. Name it, f.e. check-icon.svg.
-2. In your custom code create `hook_contact_tools_ajax_response_alter()`. This way we will attach this behaviour to all AJAX submissions.
-    
+1. Save this svg as a file, for easier access and distribution. Name it, f.e.
+   check-icon.svg.
+2. In your custom code create `hook_contact_tools_ajax_response_alter()`. This
+   way we will attach this behaviour to all AJAX submissions.
+
 ```php
 /**
  * Implements hook_contact_tools_ajax_response_alter().
@@ -66,7 +70,7 @@ function MYMODULE_contact_tools_ajax_response_alter(AjaxResponse &$ajax_response
   }
 }
 ```
-    
+
 4. Clear the cache and see the result!
 
 [![Result](https://media.giphy.com/media/7IW6vwFrzxvR2A2YmB/giphy.gif)](https://giphy.com/gifs/7IW6vwFrzxvR2A2YmB/html5)
