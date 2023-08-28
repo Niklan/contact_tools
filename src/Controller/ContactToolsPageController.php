@@ -6,10 +6,10 @@ use Drupal\contact\ContactFormInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
-use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -19,8 +19,6 @@ final class ContactToolsPageController extends ControllerBase {
 
   /**
    * The request stack.
-   *
-   * @var \Drupal\Core\Http\RequestStack
    */
   protected RequestStack $requestStack;
 
@@ -109,3 +107,4 @@ final class ContactToolsPageController extends ControllerBase {
   }
 
 }
+
